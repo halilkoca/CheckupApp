@@ -35,34 +35,38 @@ namespace WorkerService.Core.Services
                 var statusCode = await _httpService.GetUrlResponseStatusCodeAsync(checkApp.AppUrl);
 
                 if (statusCode >= 300 && statusCode < 200)
-                {
-                    // send email
-                    var sendedMail = await _emailService.SendEmail(checkApp.AppUrl, statusCode.ToString());
-
-                    if (!sendedMail.Equals("Başarılı"))
-                    {
-                        if (sendedMail.Length > 1023)
-                            sendedMail = sendedMail.Substring(0, 1023);
-                        // her execute için EF scope gerekiyor
-                        using var scope = _serviceScopeFactoryLocator.CreateScope();
-                        var repository = scope.ServiceProvider.GetService<IRepository>();
-
-                        // Http status - response time kaydet
-                        repository.Add(new AppHistory
-                        {
-                            RequestId = requestId,
-                            StatusCode = statusCode,
-                            CheckAppId = checkApp.Id,
-                            RequestDateUtc = DateTime.Now,
-                            ErrorMessage = sendedMail
-                        });
-                    }
-                }
+                    await SendMail(checkApp, "", statusCode);
             }
             catch (Exception ex)
             {
-                throw;
+                await SendMail(checkApp, ex.Message, 404);
             }
+        }
+
+
+
+        public async Task SendMail(CheckApp checkApp, string errorMessage, int statusCode)
+        {
+            if (!errorMessage.Equals(""))
+            {
+                // her execute için EF scope gerekiyor
+                using var scope = _serviceScopeFactoryLocator.CreateScope();
+                var repository = scope.ServiceProvider.GetService<IRepository>();
+
+                // Http status - response time kaydet
+                repository.Add(new AppHistory
+                {
+                    StatusCode = statusCode,
+                    CheckAppId = checkApp.Id,
+                    RequestDateUtc = DateTime.Now,
+                    ErrorMessage = errorMessage
+                });
+            }
+
+            // send email
+            await _emailService.SendEmail(checkApp, statusCode, errorMessage);
+
+            
         }
     }
 }

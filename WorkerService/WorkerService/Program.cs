@@ -24,6 +24,7 @@ namespace WorkerService
                 services.AddSingleton(typeof(ILoggerService<>), typeof(LoggerService<>));
                 services.AddSingleton<IEntryPointService, EntryPointService>();
                 services.AddSingleton<IServiceLocator, ServiceScopeFactoryLocator>();
+                services.AddSingleton<IEmailService, EmailService>();
 
                 // Infrastructure.ContainerSetup
                 services.AddMessageQueues();
