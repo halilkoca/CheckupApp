@@ -1,0 +1,37 @@
+﻿@model UIWeb.Models.CheckAppViewModel
+
+@{
+    ViewData["Title"] = "App Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CheckAppViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AppName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AppName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AppUrl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AppUrl)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Interval)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Interval)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "CreateUpdate", new { Id = Model.Id }) |
+    <a asp-action="Index">Back to List</a>
+</div>

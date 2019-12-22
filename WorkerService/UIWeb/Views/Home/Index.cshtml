@@ -1,0 +1,56 @@
+﻿@model List<UIWeb.Models.CheckAppViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+<p>@TempData["ErrorDetail"]</p>
+<p>
+    <a asp-action="CreateUpdate">Create New</a>
+</p>
+@if (Model == null || Model.Count == 0)
+{
+    <p>Henüz uygulama eklenmemiş!</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Uygulama Adı
+                </th>
+                <th>
+                    URL
+                </th>
+                <th>
+                    Süre (sn)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUrl)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Interval)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "CreateUpdate", new { Id = item.Id }) |
+                        @Html.ActionLink("Details", "CreateUpdate", new { Id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
